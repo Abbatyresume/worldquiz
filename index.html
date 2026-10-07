@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1a2e"><meta name="description" content="A free worldwide general knowledge quiz with 500+ questions from every continent."><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>Worldwide General Knowledge</title>
+<style>
+:root{--bg:#0b1a2e;--bg2:#12294a;--card:#13294766;--tx:#eef4ff;--mu:#9db4d3;--ac:#2dd4bf;--go:#fbbf24;--ok:#22c55e;--no:#ef4444;--bd:#2b4a75;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:radial-gradient(circle at 50% -10%,var(--bg2),var(--bg) 70%);background-color:var(--bg)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background:radial-gradient(circle,#7fb2ff 1.2px,transparent 1.6px) 0 0/16px 16px;-webkit-mask:radial-gradient(ellipse 60% 45% at 50% 45%,#000 40%,transparent 75%);mask:radial-gradient(ellipse 60% 45% at 50% 45%,#000 40%,transparent 75%)}
+#app{position:relative;max-width:720px;margin:0 auto;padding:20px 16px 40px}
+.screen{animation:in .4s ease}@keyframes in{from{opacity:0;transform:translateY(10px)}}
+h1{font-size:clamp(1.9rem,7vw,3rem);line-height:1.05;margin:.3em 0;letter-spacing:.02em;text-align:center;background:linear-gradient(90deg,var(--ac),var(--go));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-align:center;color:var(--mu);font-size:1.1rem;margin-bottom:24px}
+.globe{display:block;margin:20px auto 0;width:110px;height:110px;animation:spin 18s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0;backdrop-filter:blur(4px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{text-align:center}.stat b{display:block;font-size:1.5rem;color:var(--go)}.stat span{color:var(--mu);font-size:.85rem}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{display:block;width:100%;padding:14px;border-radius:12px;border:1px solid var(--bd);background:#1a3a66;font-weight:700;font-size:1.05rem;margin:8px 0;transition:.15s}
+.btn:hover{transform:translateY(-1px);border-color:var(--ac)}.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--go);outline-offset:2px}
+.btn.pri{background:linear-gradient(90deg,#0d9488,#2563eb);border:0}
+.hud{display:flex;justify-content:space-between;gap:8px;font-weight:600;font-size:.95rem;flex-wrap:wrap}
+.bar{height:8px;background:#0006;border-radius:8px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac);transition:width .4s}
+.tbar i{transition:width .1s linear}
+.tag{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:700;background:#0006;border:1px solid var(--bd);margin-right:6px}
+.d1{color:#86efac}.d2{color:var(--go)}.d3{color:#fca5a5}
+.q{font-size:clamp(1.15rem,4.5vw,1.55rem);font-weight:700;margin:12px 0 16px;line-height:1.3}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:14px;margin:8px 0;border-radius:12px;border:2px solid var(--bd);background:#0d213f;font-size:1.02rem;transition:.15s}
+.opt:not(:disabled):hover{border-color:var(--ac);transform:translateX(3px)}
+.opt span{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#1e3d6b;font-weight:800}
+.opt.ok{border-color:var(--ok);background:#14532d}.opt.no{border-color:var(--no);background:#5b1a1a;animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.fb{margin-top:10px;padding:12px;border-radius:12px;border-left:5px solid var(--ok);background:#0006}.fb.bad{border-color:var(--no)}.fb b{display:block;margin-bottom:4px}
+.big{font-size:3rem;font-weight:800;color:var(--go);text-align:center}.lvl{font-size:1.6rem;font-weight:800;text-align:center;color:var(--ac)}
+.rv{border-left:4px solid var(--ok);padding-left:10px;margin:14px 0}.rv.bad{border-color:var(--no)}.rv small{color:var(--mu)}
+ul{padding-left:20px;line-height:1.7}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><main id="app"></main>
+<!-- AD SLOT: paste your Adsterra banner code here, then remove the hidden attribute -->
+<div id="ad-slot" hidden style="text-align:center;margin:8px auto 24px;min-height:50px"></div>
+<script>
+// [category/round, difficulty 1-3, question, correct, [3 wrong], explanation]
+const Q=[
+["Capitals Challenge",1,"What is the capital of Australia?","Canberra",["Sydney","Melbourne","Perth"],"Canberra was purpose-built as the capital as a compromise between rivals Sydney and Melbourne."],
+["World Records",1,"Which river is generally regarded as the longest in Africa?","Nile",["Congo","Niger","Zambezi"],"The Nile flows about 6,650 km through northeastern Africa into the Mediterranean."],
+["Which Country?",1,"Which country has the largest population in the world today?","India",["China","United States","Indonesia"],"According to UN estimates, India overtook China as the most populous country in 2023."],
+["Geography",1,"Which is the largest ocean on Earth?","Pacific Ocean",["Atlantic Ocean","Indian Ocean","Arctic Ocean"],"The Pacific covers about one third of Earth's surface."],
+["Economics",1,"What is the official currency of Japan?","Yen",["Won","Yuan","Rupee"],"The yen (¥) is Japan's currency and one of the most traded in the world."],
+["Space",1,"Which planet is known as the Red Planet?","Mars",["Venus","Jupiter","Mercury"],"Iron oxide (rust) on its surface gives Mars its reddish colour."],
+["Animals & Nature",1,"What is the largest living land animal?","African elephant",["White rhinoceros","Hippopotamus","Giraffe"],"African bush elephants can weigh over 6 tonnes."],
+["Geography",1,"On which continent is the Sahara Desert mostly located?","Africa",["Asia","Australia","South America"],"The Sahara spans North Africa and is the largest hot desert in the world."],
+["Capitals Challenge",1,"What is the capital of Brazil?","Brasília",["Rio de Janeiro","São Paulo","Salvador"],"Brasília was inaugurated in 1960 as a planned capital in the country's interior."],
+["Landmark Challenge",1,"In which country is the Taj Mahal?","India",["Pakistan","Bangladesh","Iran"],"The Taj Mahal in Agra was built by Emperor Shah Jahan as a mausoleum for his wife Mumtaz Mahal."],
+["Flag Challenge",1,"Which country's flag is a red circle on a plain white background?","Japan",["Bangladesh","Laos","Vietnam"],"Japan's flag, the Hinomaru, shows a red sun disc on white. Bangladesh's red disc is on green."],
+["World Records",1,"Which is the largest country in the world by land area?","Russia",["Canada","China","United States"],"Russia spans about 17 million km² across Eastern Europe and northern Asia."],
+["Food & Traditions",1,"Kimchi, a fermented vegetable dish, is a staple of which country's cuisine?","South Korea",["Japan","Thailand","Mongolia"],"Kimchi is central to Korean food culture; kimjang, the making of kimchi, is UNESCO-listed heritage."],
+["Animals & Nature",1,"Which is the fastest land animal?","Cheetah",["Lion","Pronghorn antelope","Greyhound"],"Cheetahs can reach roughly 100 km/h in short sprints."],
+["Literature",2,"Who wrote the novel 'Things Fall Apart'?","Chinua Achebe",["Wole Soyinka","Chimamanda Ngozi Adichie","Ngũgĩ wa Thiong'o"],"Nigerian author Chinua Achebe published it in 1958; it is among the most widely read African novels."],
+["History Challenge",2,"Machu Picchu was built by which civilization?","Inca",["Maya","Aztec","Olmec"],"The Inca built Machu Picchu in the Andes in the 15th century."],
+["International Organizations",2,"Which UN agency, headquartered in Geneva, leads international public health efforts?","World Health Organization",["UNESCO","Food and Agriculture Organization","International Monetary Fund"],"The WHO was founded in 1948 and is based in Geneva, Switzerland."],
+["Economics",2,"What is the currency of South Africa?","Rand",["Naira","Cedi","Shilling"],"The rand is named after the Witwatersrand, the gold-rich ridge near Johannesburg."],
+["Capitals Challenge",2,"What is the capital of Türkiye (Turkey)?","Ankara",["Istanbul","Izmir","Bursa"],"Ankara became the capital in 1923, when the Republic was founded; Istanbul is the largest city."],
+["History Challenge",2,"Mansa Musa, famed for his wealth and pilgrimage to Mecca, ruled which empire?","Mali Empire",["Songhai Empire","Ghana Empire","Kingdom of Aksum"],"Mansa Musa ruled the Mali Empire in the 14th century; Timbuktu became a major centre of learning."],
+["Science Challenge",2,"Which gas makes up most of Earth's atmosphere?","Nitrogen",["Oxygen","Carbon dioxide","Argon"],"Nitrogen is about 78% of the atmosphere; oxygen is about 21%."],
+["Landmark Challenge",2,"In which country is Mount Kilimanjaro, Africa's tallest mountain?","Tanzania",["Kenya","Uganda","Ethiopia"],"Kilimanjaro rises to 5,895 m in northeastern Tanzania, close to the Kenyan border."],
+["Famous People",2,"Wangari Maathai, the first African woman to win the Nobel Peace Prize, founded which movement?","Green Belt Movement",["Chipko Movement","Landless Workers' Movement","Fridays for Future"],"Kenya's Maathai founded the Green Belt Movement in 1977; it has planted tens of millions of trees."],
+["Language",2,"Which language has the most native speakers in the world?","Mandarin Chinese",["Spanish","English","Hindi"],"Mandarin has roughly 900 million or more native speakers."],
+["Geography",2,"The Great Barrier Reef lies off the coast of which Australian state?","Queensland",["Western Australia","Victoria","Tasmania"],"The reef stretches over 2,300 km along Queensland's coast."],
+["Sports",2,"Which country won the 2022 FIFA World Cup in Qatar?","Argentina",["France","Croatia","Morocco"],"Argentina beat France on penalties after a 3–3 draw in the final."],
+["Landmark Challenge",2,"Angkor Wat, the largest religious monument in the world, is located in which country?","Cambodia",["Thailand","Vietnam","Myanmar"],"Built in the 12th century as a Hindu temple, Angkor Wat later became Buddhist."],
+["Space & Exploration",2,"Who was the first human to travel into space, in 1961?","Yuri Gagarin",["Neil Armstrong","Alan Shepard","Valentina Tereshkova"],"Soviet cosmonaut Yuri Gagarin orbited Earth aboard Vostok 1 on 12 April 1961."],
+["History Challenge",2,"The Rosetta Stone was key to deciphering which writing system?","Egyptian hieroglyphs",["Linear B","Cuneiform","Maya glyphs"],"Its text in hieroglyphic, Demotic and Greek let Champollion crack hieroglyphs in the 1820s."],
+["History Challenge",2,"Which leader, known as 'El Libertador', helped liberate much of northern South America from Spain?","Simón Bolívar",["José de San Martín","Bernardo O'Higgins","Antonio José de Sucre"],"Bolívar led campaigns that freed present-day Venezuela, Colombia, Ecuador, Peru and Bolivia."],
+["Who Am I?",2,"Who Am I? I led my country to independence in 1957 and became the first president of Ghana.","Kwame Nkrumah",["Jomo Kenyatta","Julius Nyerere","Léopold Senghor"],"Kwame Nkrumah led the Gold Coast to independence as Ghana, the first sub-Saharan colony to do so."],
+["History Challenge",3,"The 1494 Treaty of Tordesillas divided newly claimed lands outside Europe between which two powers?","Spain and Portugal",["England and France","Spain and the Netherlands","Portugal and England"],"Mediated by the Pope, it drew a line west of Cape Verde, giving Portugal Brazil's eastern part and Spain most of the Americas."],
+["Capitals Challenge",3,"What is the capital of Kazakhstan?","Astana",["Almaty","Tashkent","Bishkek"],"Astana replaced Almaty as capital in 1997; it was renamed Nur-Sultan in 2019 and Astana again in 2022."],
+["Science Challenge",3,"Which chemical element has the symbol W?","Tungsten",["Tantalum","Titanium","Thallium"],"W comes from 'wolfram', the old name for tungsten, which has the highest melting point of all metals."],
+["History Challenge",3,"Admiral Zheng He led his famous treasure voyages across the Indian Ocean under which Chinese dynasty?","Ming",["Tang","Song","Qing"],"Zheng He's fleets sailed as far as East Africa in the early 15th century under the Ming emperors."],
+["World Records",3,"Which is the deepest lake in the world?","Lake Baikal",["Lake Tanganyika","Lake Superior","Caspian Sea"],"Siberia's Lake Baikal is over 1,600 m deep and holds about 20% of the world's unfrozen fresh water."],
+["Sports",3,"Which nation has won the most men's Cricket World Cup titles (through 2023)?","Australia",["India","West Indies","England"],"Australia has won six titles; India and the West Indies have two each."],
+["Economics",3,"Which international organization issues Special Drawing Rights (SDRs)?","International Monetary Fund",["World Bank","World Trade Organization","Bank for International Settlements"],"The IMF created SDRs in 1969 as a reserve asset supplementing its members' official reserves."],
+["Space & Exploration",3,"Which country's Chandrayaan-3 mission landed near the Moon's south polar region in 2023?","India",["China","Japan","Israel"],"On 23 August 2023, India became the first country to land a spacecraft near the lunar south pole."],
+["Famous People",1,"Who developed the theory of general relativity?","Albert Einstein",["Isaac Newton","Niels Bohr","Galileo Galilei"],"Einstein published the theory in 1915."],
+["World Records",1,"Which is the highest mountain above sea level?","Mount Everest",["K2","Kangchenjunga","Lhotse"],"Everest, on the Nepal–China border, is about 8,849 m high."],
+["Art & Culture",2,"Which Mexican artist painted 'The Two Fridas' (1939)?","Frida Kahlo",["Diego Rivera","Remedios Varo","Rufino Tamayo"],"Kahlo is famed for her vivid self-portraits."],
+["Literature",2,"The ancient Sanskrit epic 'Ramayana' is traditionally attributed to whom?","Valmiki",["Vyasa","Kalidasa","Tulsidas"],"Valmiki is honoured as the 'Adi Kavi', the first poet."],
+["History Challenge",2,"Which empire had Constantinople as its capital until 1453?","Byzantine Empire",["Persian Empire","Carolingian Empire","Mughal Empire"],"The Byzantine Empire fell when the Ottomans conquered the city in 1453."],
+["Inventions",2,"Who is credited with introducing movable-type printing in Europe around 1440?","Johannes Gutenberg",["William Caxton","Aldus Manutius","Karl Benz"],"Gutenberg's press helped spread books across Europe."],
+["Inventions",3,"Papermaking is traditionally credited to which Chinese court official in 105 CE?","Cai Lun",["Zhang Heng","Bi Sheng","Zheng He"],"Cai Lun of the Han court reported an improved paper-making method."],
+["Animals & Nature",2,"Which is the largest living fish species?","Whale shark",["Great white shark","Basking shark","Blue marlin"],"Whale sharks can reach about 12 m and feed on plankton."],
+["Sports",2,"Which country hosted the first modern Olympic Games in 1896?","Greece",["France","United Kingdom","United States"],"The 1896 Games were held in Athens."],
+["Food & Traditions",2,"Jollof rice is a celebrated dish across which part of the world?","West Africa",["East Africa","South Asia","Central America"],"Nigeria, Ghana, Senegal and others share, and playfully debate, their jollof."],
+["Space & Exploration",2,"Which space telescope launched in 2021 mainly observes in infrared light?","James Webb Space Telescope",["Hubble Space Telescope","Kepler","Chandra"],"Webb launched on 25 December 2021 and studies the early universe."],
+["Science Challenge",1,"What force keeps the planets in orbit around the Sun?","Gravity",["Magnetism","Friction","Nuclear fission"],"The Sun's gravity continually pulls the planets onto curved paths."],
+["Science Challenge",2,"Which is the hardest naturally occurring material?","Diamond",["Quartz","Corundum","Graphite"],"Diamond is 10 on the Mohs hardness scale."]
+];
+const RN={f:'Africa',a:'Asia',m:'Asia',e:'Europe',n:'North America',s:'South America',o:'Oceania'},CT=['Africa','Asia','Europe','North America','South America','Oceania'],NOC=['Egypt','Russia','Georgia','Armenia','Azerbaijan','Türkiye'];
+const rows=(s,d)=>s.split(';').map(x=>{const p=x.split(':');return{a:p[0],b:p[1],r:p[2],d}});
+const dist=(R,row,f)=>()=>{const o=shuf(R.filter(x=>x[f]!=row[f]&&x.r==row.r)).concat(shuf(R.filter(x=>x[f]!=row[f]&&x.r!=row.r)));return[...new Set(o.map(x=>x[f]))].slice(0,3)};
+const CAP=[...rows("France:Paris:e;Japan:Tokyo:a;Egypt:Cairo:f;Italy:Rome:e;Germany:Berlin:e;Canada:Ottawa:n;India:New Delhi:a;China:Beijing:a;Russia:Moscow:e;Spain:Madrid:e;Mexico:Mexico City:n;Argentina:Buenos Aires:s;Nigeria:Abuja:f;Kenya:Nairobi:f;United Kingdom:London:e;United States:Washington, D.C.:n;Thailand:Bangkok:a;Greece:Athens:e;Saudi Arabia:Riyadh:m;South Korea:Seoul:a;Indonesia:Jakarta:a;Peru:Lima:s;Cuba:Havana:n;Ghana:Accra:f;Ethiopia:Addis Ababa:f;Portugal:Lisbon:e;Iran:Tehran:m;Iraq:Baghdad:m;Vietnam:Hanoi:a;Philippines:Manila:a;Pakistan:Islamabad:a",1),
+...rows("Morocco:Rabat:f;Algeria:Algiers:f;Tunisia:Tunis:f;Senegal:Dakar:f;Tanzania:Dodoma:f;Uganda:Kampala:f;Zimbabwe:Harare:f;Zambia:Lusaka:f;Angola:Luanda:f;Mozambique:Maputo:f;Madagascar:Antananarivo:f;Sudan:Khartoum:f;Libya:Tripoli:f;Cameroon:Yaoundé:f;Rwanda:Kigali:f;Namibia:Windhoek:f;Botswana:Gaborone:f;Mali:Bamako:f;Niger:Niamey:f;Somalia:Mogadishu:f;DR Congo:Kinshasa:f;Chile:Santiago:s;Colombia:Bogotá:s;Venezuela:Caracas:s;Ecuador:Quito:s;Uruguay:Montevideo:s;Paraguay:Asunción:s;Panama:Panama City:n;Jamaica:Kingston:n;New Zealand:Wellington:o;Fiji:Suva:o;Papua New Guinea:Port Moresby:o;Bangladesh:Dhaka:a;Nepal:Kathmandu:a;Afghanistan:Kabul:a;Sweden:Stockholm:e;Norway:Oslo:e;Finland:Helsinki:e;Poland:Warsaw:e;Ukraine:Kyiv:e;Austria:Vienna:e;Switzerland:Bern:e;Hungary:Budapest:e;Czechia:Prague:e;Ireland:Dublin:e;Syria:Damascus:m;Jordan:Amman:m;Lebanon:Beirut:m;United Arab Emirates:Abu Dhabi:m;Qatar:Doha:m;Mongolia:Ulaanbaatar:a;Cambodia:Phnom Penh:a;Laos:Vientiane:a;Malaysia:Kuala Lumpur:a",2),
+...rows("Burkina Faso:Ouagadougou:f;Eritrea:Asmara:f;Malawi:Lilongwe:f;Lesotho:Maseru:f;Eswatini:Mbabane:f;Gabon:Libreville:f;Togo:Lomé:f;Benin:Porto-Novo:f;Mauritania:Nouakchott:f;Djibouti:Djibouti City:f;Kyrgyzstan:Bishkek:a;Uzbekistan:Tashkent:a;Tajikistan:Dushanbe:a;Turkmenistan:Ashgabat:a;Azerbaijan:Baku:a;Armenia:Yerevan:a;Georgia:Tbilisi:a;Bhutan:Thimphu:a;Brunei:Bandar Seri Begawan:a;Myanmar:Naypyidaw:a;Timor-Leste:Dili:a;Vanuatu:Port Vila:o;Samoa:Apia:o;Tonga:Nukuʻalofa:o;Suriname:Paramaribo:s;Guyana:Georgetown:s;Belize:Belmopan:n;Slovakia:Bratislava:e;Slovenia:Ljubljana:e;Croatia:Zagreb:e;Serbia:Belgrade:e;Bulgaria:Sofia:e;Romania:Bucharest:e;Lithuania:Vilnius:e;Latvia:Riga:e;Estonia:Tallinn:e;Belarus:Minsk:e;Moldova:Chișinău:e;Albania:Tirana:e;North Macedonia:Skopje:e;Iceland:Reykjavik:e;Oman:Muscat:m;Bahrain:Manama:m;Kuwait:Kuwait City:m",3)];
+const CUR=[...rows("United Kingdom:British pound:e;United States:US dollar:n;India:Indian rupee:a;China:Chinese yuan:a;Nigeria:Nigerian naira:f;Russia:Russian ruble:e;Mexico:Mexican peso:n;Switzerland:Swiss franc:e;Canada:Canadian dollar:n;South Korea:South Korean won:a;Egypt:Egyptian pound:f;Kenya:Kenyan shilling:f;Saudi Arabia:Saudi riyal:m;Brazil:Brazilian real:s;Australia:Australian dollar:o",1),
+...rows("Ghana:Ghanaian cedi:f;Ethiopia:Ethiopian birr:f;Morocco:Moroccan dirham:f;United Arab Emirates:UAE dirham:m;Türkiye:Turkish lira:m;Iran:Iranian rial:m;Pakistan:Pakistani rupee:a;Bangladesh:Bangladeshi taka:a;Thailand:Thai baht:a;Vietnam:Vietnamese dong:a;Indonesia:Indonesian rupiah:a;Malaysia:Malaysian ringgit:a;Philippines:Philippine peso:a;Poland:Polish zloty:e;Czechia:Czech koruna:e;Hungary:Hungarian forint:e;Sweden:Swedish krona:e;Norway:Norwegian krone:e;Denmark:Danish krone:e;Argentina:Argentine peso:s;Chile:Chilean peso:s;Colombia:Colombian peso:s;Peru:Peruvian sol:s;Israel:Israeli shekel:m;Tanzania:Tanzanian shilling:f;Uganda:Ugandan shilling:f;Zambia:Zambian kwacha:f;Botswana:Botswana pula:f;Angola:Angolan kwanza:f;Algeria:Algerian dinar:f;Tunisia:Tunisian dinar:f;Kuwait:Kuwaiti dinar:m;Jordan:Jordanian dinar:m;Nepal:Nepalese rupee:a;Sri Lanka:Sri Lankan rupee:a;New Zealand:New Zealand dollar:o;Singapore:Singapore dollar:a;Ukraine:Ukrainian hryvnia:e;Romania:Romanian leu:e;Iceland:Icelandic króna:e",2),
+...rows("Mongolia:Mongolian tögrög:a;Myanmar:Myanmar kyat:a;Laos:Lao kip:a;Georgia:Georgian lari:a;Armenia:Armenian dram:a;Azerbaijan:Azerbaijani manat:a;Kazakhstan:Kazakhstani tenge:a;Uzbekistan:Uzbekistani som:a;Bhutan:Bhutanese ngultrum:a;Cambodia:Cambodian riel:a;Guatemala:Guatemalan quetzal:n;Paraguay:Paraguayan guaraní:s;Mozambique:Mozambican metical:f;Malawi:Malawian kwacha:f;Madagascar:Malagasy ariary:f;Eswatini:Swazi lilangeni:f;Lesotho:Lesotho loti:f;Namibia:Namibian dollar:f;Gambia:Gambian dalasi:f;Sierra Leone:Sierra Leonean leone:f;Mauritius:Mauritian rupee:f;Albania:Albanian lek:e;Serbia:Serbian dinar:e;Papua New Guinea:Papua New Guinean kina:o;Tonga:Tongan paʻanga:o;Samoa:Samoan tala:o;Fiji:Fijian dollar:o;Haiti:Haitian gourde:n;Jamaica:Jamaican dollar:n;Dominican Republic:Dominican peso:n;Iraq:Iraqi dinar:m;Libya:Libyan dinar:f",3)];
+const LM=[...rows("Eiffel Tower:France:e;Colosseum:Italy:e;Pyramids of Giza:Egypt:f;Great Wall:China:a;Christ the Redeemer:Brazil:s;Statue of Liberty:United States:n;Sydney Opera House:Australia:o;Mount Fuji:Japan:a;Stonehenge:United Kingdom:e;Burj Khalifa:United Arab Emirates:m",1),
+...rows("Petra:Jordan:m;Chichén Itzá:Mexico:n;Hagia Sophia:Türkiye:m;Table Mountain:South Africa:f;Borobudur:Indonesia:a;Alhambra:Spain:e;Acropolis:Greece:e;Petronas Towers:Malaysia:a;Moai statues:Chile:s;Galápagos Islands:Ecuador:s;Forbidden City:China:a;CN Tower:Canada:n;Neuschwanstein Castle:Germany:e;Hassan II Mosque:Morocco:f;Ha Long Bay:Vietnam:a",2),
+...rows("Lalibela rock-hewn churches:Ethiopia:f;Great Mosque of Djenné:Mali:f;Bagan temples:Myanmar:a;Tiger's Nest Monastery:Bhutan:a;Persepolis:Iran:m;Sigiriya rock fortress:Sri Lanka:a;Great Zimbabwe:Zimbabwe:f;Cliffs of Moher:Ireland:e;Meteora monasteries:Greece:e;Tikal:Guatemala:n;Ngorongoro Crater:Tanzania:f;Okavango Delta:Botswana:f;Sheikh Zayed Grand Mosque:United Arab Emirates:m;Prambanan:Indonesia:a",3)];
+const EL=[...rows("H:Hydrogen;O:Oxygen;C:Carbon;He:Helium;Fe:Iron;Au:Gold;Ag:Silver;Na:Sodium",1),...rows("Pb:Lead;Sn:Tin;Cu:Copper;K:Potassium;Hg:Mercury;Zn:Zinc;Ca:Calcium;Cl:Chlorine;Ne:Neon;N:Nitrogen",2),...rows("Sb:Antimony;Mn:Manganese;Cr:Chromium;Ni:Nickel;Pt:Platinum;U:Uranium;Ti:Titanium;Co:Cobalt;As:Arsenic;Mg:Magnesium;Li:Lithium;Si:Silicon",3)];
+const LG=[...rows("Brazil:Portuguese;Japan:Japanese;Egypt:Arabic;Iran:Persian (Farsi);Germany:German;Russia:Russian;Italy:Italian;Thailand:Thai;Argentina:Spanish;South Korea:Korean;Türkiye:Turkish;Greece:Greek;Vietnam:Vietnamese",1),...rows("Angola:Portuguese;Mozambique:Portuguese;Senegal:French;Mali:French;Netherlands:Dutch;Poland:Polish;Hungary:Hungarian;Cambodia:Khmer;Laos:Lao;Myanmar:Burmese;Mongolia:Mongolian;Ukraine:Ukrainian;Bangladesh:Bengali;Indonesia:Indonesian;Nepal:Nepali;Iceland:Icelandic;Colombia:Spanish;Chile:Spanish;Denmark:Danish;Czechia:Czech;Romania:Romanian;Cuba:Spanish",2),...rows("Georgia:Georgian;Armenia:Armenian;Azerbaijan:Azerbaijani;Uzbekistan:Uzbek;Turkmenistan:Turkmen;Albania:Albanian;Lithuania:Lithuanian;Latvia:Latvian;Estonia:Estonian;Slovakia:Slovak;Croatia:Croatian;Serbia:Serbian;Bulgaria:Bulgarian;Sweden:Swedish",3)];
+const P=[];
+CAP.forEach(r=>{P.push(["Capitals Challenge",r.d,`What is the capital of ${r.a}?`,r.b,dist(CAP,r,'b'),`${r.b} is the capital of ${r.a}.`,r.a,'c']);
+if(!NOC.includes(r.a))P.push(["Which Continent?",r.d,`On which continent is ${r.a} located?`,RN[r.r],()=>shuf(CT.filter(c=>c!=RN[r.r])).slice(0,3),`${r.a} is in ${RN[r.r]}${r.r=='m'?' (in the Middle East)':''}; its capital is ${r.b}.`,r.a,'n'])});
+CUR.forEach(r=>P.push(["Economics",r.d,`What is the official currency of ${r.a}?`,r.b,dist(CUR,r,'b'),`The official currency of ${r.a} is the ${r.b}.`,r.a,'u']));
+LM.forEach(r=>P.push(["Landmark Challenge",r.d,`In which country is ${r.a} located?`,r.b,dist(CAP,{r:r.r,a:r.b},'a'),`${r.a} is in ${r.b}.`,r.a,'l']));
+EL.forEach(r=>P.push(["Science Challenge",r.d,`Which chemical element has the symbol ${r.a}?`,r.b,dist(EL,r,'b'),`${r.a} is the chemical symbol for ${r.b}.`,r.a,'e']));
+LG.forEach(r=>P.push(["Language",r.d,`Which language is the official language of ${r.a}?`,r.b,dist(LG,r,'b'),`${r.b} is the official language of ${r.a}.`,r.a,'g']));
+const POOL=Q.concat(P);
+const $=s=>document.querySelector(s),app=$('#app'),TIME=20,AUTO=5;
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const PTS={1:100,2:200,3:300},LN={1:'Easy',2:'Medium',3:'Hard'};
+const LV=[[96,'Ultimate Global Genius','Flawless! You know our planet inside out.'],[81,'World Expert','Outstanding! Few people know the world this well.'],[61,'Global Scholar','Great work! Your knowledge spans continents.'],[41,'Knowledge Seeker','Solid effort! Keep exploring and you will climb higher.'],[21,'Curious Traveler','Good start! Every journey begins with curiosity.'],[0,'World Explorer','The adventure has just begun, so play again and learn!']];
+let hs=0;try{hs=+localStorage.getItem('wgk_hs')||0}catch(e){}
+let G,tm,auto;
+const globe='<svg class="globe" viewBox="0 0 100 100" fill="none" stroke="#2dd4bf" stroke-width="1.5" aria-hidden="true"><circle cx="50" cy="50" r="44"/><ellipse cx="50" cy="50" rx="18" ry="44"/><ellipse cx="50" cy="50" rx="36" ry="44" opacity=".5"/><path d="M6 50h88M12 28h76M12 72h76" opacity=".6"/></svg>';
+function home(){clearInterval(tm);clearTimeout(auto);
+app.innerHTML=`<section class="screen">${globe}<h1>WORLDWIDE GENERAL KNOWLEDGE</h1><p class="sub">How much do you know about our world?</p>
+<div class="grid card"><div class="stat"><b>20</b><span>Questions</span></div><div class="stat"><b>${TIME}s</b><span>Per question</span></div><div class="stat"><b>${POOL.length}</b><span>Question bank</span></div><div class="stat"><b>${hs.toLocaleString()}</b><span>High Score</span></div></div>
+<button class="btn pri" id="st">Start Quiz</button><button class="btn" id="hw">How to Play</button>
+<div class="card" id="how" hidden><b>How to play</b><ul><li>Answer 20 questions from every region of the world.</li><li>You have ${TIME} seconds for each one. Answers lock when you pick or time runs out.</li><li>Special rounds (flags, capitals, landmarks, who am I and more) appear along the way.</li><li>Keys 1–4 or A–D also select answers.</li><li>Answer fast for a small time bonus (up to 50 points).</li></ul>
+<b>Difficulty</b><ul><li><span class="d1">Easy</span>: 5 questions, 100 points</li><li><span class="d2">Medium</span>: 10 questions, 200 points</li><li><span class="d3">Hard</span>: 5 questions, 300 points</li></ul></div></section>`;
+$('#st').onclick=start;$('#hw').onclick=()=>{const h=$('#how');h.hidden=!h.hidden}}
+function start(){const used=new Set(),cnt={};
+const by=(d,n)=>{const o=[];for(const q of shuf(POOL.filter(q=>q[1]==d))){if(o.length>=n)break;const g=q[7];if((q[6]&&used.has(q[6]))||(g&&(cnt[g]||0)>=3))continue;if(q[6])used.add(q[6]);if(g)cnt[g]=(cnt[g]||0)+1;o.push(q)}return o};
+const sel=shuf([...by(1,5),...by(2,10),...by(3,5)]).map(q=>{const o=shuf([q[3],...(typeof q[4]=='function'?q[4]():q[4])]);return{tag:q[0],d:q[1],q:q[2],o,c:o.indexOf(q[3]),e:q[5]}});
+G={qs:sel,i:0,score:0,ok:0,time:0,log:[]};show()}
+function show(){clearTimeout(auto);const q=G.qs[G.i];G.lock=false;G.t0=Date.now();
+app.innerHTML=`<section class="screen"><div class="hud"><span>Question ${G.i+1} / 20</span><span>Score: ${G.score.toLocaleString()} points</span><span id="tl">Time: ${TIME} seconds</span></div>
+<div class="bar" aria-hidden="true"><i style="width:${G.i/20*100}%"></i></div><div class="bar tbar" aria-hidden="true"><i id="tb" style="width:100%;background:var(--ac)"></i></div>
+<div class="card"><span class="tag">${q.tag}</span><span class="tag d${q.d}">${LN[q.d]} · ${PTS[q.d]} pts</span><p class="q" id="qq">${q.q}</p>
+<div role="group" aria-labelledby="qq">${q.o.map((t,k)=>`<button class="opt" data-k="${k}"><span>${'ABCD'[k]}</span>${t}</button>`).join('')}</div>
+<div id="fb" aria-live="polite"></div></div></section>`;
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.k));
+clearInterval(tm);tm=setInterval(()=>{const l=TIME-(Date.now()-G.t0)/1000;if(l<=0){pick(-1);return}
+$('#tb').style.width=l/TIME*100+'%';$('#tb').style.background=l<6?'var(--no)':l<11?'var(--go)':'var(--ac)';$('#tl').textContent='Time: '+Math.ceil(l)+' seconds'},100)}
+function pick(k){if(G.lock)return;G.lock=true;clearInterval(tm);const q=G.qs[G.i],used=Math.min(TIME,(Date.now()-G.t0)/1000);G.time+=used;
+const right=k==q.c;let pts=0;if(right){pts=PTS[q.d]+Math.round((TIME-used)/TIME*50);G.score+=pts;G.ok++}
+G.log.push({q,k,pts});
+document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(j==q.c)b.classList.add('ok');else if(j==k)b.classList.add('no')});
+if(k<0)$('#tl').textContent="Time's up!";
+const last=G.i==19;
+$('#fb').innerHTML=`<div class="fb ${right?'':'bad'}"><b>${right?'Correct! +'+pts+' points':k<0?"Time's up. The answer was "+q.o[q.c]:'Incorrect. The answer was '+q.o[q.c]}</b>${q.e}</div><button class="btn pri" id="nx">${last?'See Results':'Next Question'}</button>`;
+$('#nx').focus();$('#nx').onclick=next;auto=setTimeout(next,AUTO*1000+(last?0:0))}
+function next(){clearTimeout(auto);if(!G.lock)return;G.lock=false;G.i++;G.i>=20?end():show()}
+function end(){const acc=Math.round(G.ok/20*100),L=LV.find(l=>acc>=l[0]),best=G.score>hs;
+if(best){hs=G.score;try{localStorage.setItem('wgk_hs',hs)}catch(e){}}
+const m=Math.floor(G.time/60),s=Math.round(G.time%60);
+app.innerHTML=`<section class="screen"><h1>Quiz Complete</h1><div class="big">${G.score.toLocaleString()}</div><p class="sub">points${best?' · New High Score!':''}</p><div class="lvl">${L[1]}</div><p class="sub">${L[2]}</p>
+<div class="grid card"><div class="stat"><b>${G.ok}</b><span>Correct</span></div><div class="stat"><b>${20-G.ok}</b><span>Incorrect</span></div><div class="stat"><b>${acc}%</b><span>Accuracy</span></div><div class="stat"><b>${m}:${String(s).padStart(2,'0')}</b><span>Total time</span></div></div>
+<button class="btn pri" id="pa">Play Again</button><button class="btn" id="rv">Review Answers</button><button class="btn" id="sh">Share Score</button><button class="btn" id="hm">Return to Home</button><p class="sub" id="sm"></p></section>`;
+$('#pa').onclick=start;$('#hm').onclick=home;$('#rv').onclick=review;
+$('#sh').onclick=async()=>{const t=`I scored ${G.score.toLocaleString()} points (${acc}%) and earned "${L[1]}" in the Worldwide General Knowledge Quiz! Can you beat me?`;
+try{if(navigator.share){await navigator.share({text:t});return}await navigator.clipboard.writeText(t);$('#sm').textContent='Score copied to clipboard!'}catch(e){$('#sm').textContent=t}}}
+function review(){app.innerHTML=`<section class="screen"><h1>Review</h1>${G.log.map((r,n)=>{const q=r.q,ok=r.k==q.c;return`<div class="card rv ${ok?'':'bad'}"><small>${n+1}. ${q.tag} · ${LN[q.d]}</small><p><b>${q.q}</b></p><div>${ok?'✔':'✘'} Your answer: ${r.k<0?'No answer':q.o[r.k]}</div>${ok?'':`<div>✔ Correct: ${q.o[q.c]}</div>`}<small>${q.e}</small></div>`}).join('')}<button class="btn pri" id="bk">Back to Results</button></section>`;$('#bk').onclick=end}
+document.addEventListener('keydown',e=>{if(!G||G.lock||!$('.opt'))return;const k='1234'.indexOf(e.key);const l='abcd'.indexOf(e.key.toLowerCase());const j=k>=0?k:l;if(j>=0&&e.key.length==1)pick(j)});
+home();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
